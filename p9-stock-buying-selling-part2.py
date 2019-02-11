@@ -23,3 +23,4 @@ def max_profit(prices = []):
 
 if __name__ == "__main__":
     print(max_profit([1,3,1,1,5]))
+    print(max_profit([5]*10))

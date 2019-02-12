@@ -2,6 +2,8 @@
 """
 Implementation of a Binary Search Tree in Python
 """
+from timeit import timeit
+
 class Node(object):
 
     def __init__(self, data):
@@ -12,6 +14,9 @@ class Node(object):
 
     def __str__(self):
         return "%r" % self.data
+
+    def __repr__(self):
+        return self.data
 
     def __contains__(self,data):
         if self.data == data:
@@ -36,7 +41,67 @@ class Node(object):
             else:
                 self.right.insert(data)
 
-        self._balance()
+        if not self.check_balanced():
+            self._balance()  # currently not implemented
+
+    def _get_balance(self,counter=0):
+        """By calculating height separately, we reduce complexity and
+        result in O(n) time"""
+        if self.left == None and self.right == None:
+            return counter
+
+        if self.left:
+            left_height = self.left._get_balance(counter=counter+1)
+        else:
+            left_height = counter
+
+        if self.right:
+            right_height = self.right._get_balance(counter=counter+1)
+        else:
+            right_height = counter
+
+        return max(left_height,right_height)
+            
+    def check_balanced_old(self):
+        """
+        Check if a tree is balanced.
+
+        This uses a helper function
+        """
+        if self.left:
+            left_height = self.left._get_balance(counter=1)
+        else:
+            left_height = 0  # no depth
+
+        if self.right:
+            right_height = self.right._get_balance(counter=1)
+        else:
+            right_height = 0
+        
+        return abs(left_height - right_height) <= 1
+
+    def check_balanced(self,counter=0):
+        """
+        Check if a tree is balanced.
+
+        This is purely recursive, at the "cost" of idiomatic
+        python. This that it relies on python's ability to return two
+        values as a tuple.
+
+        Runs in O(n) as we touch every node eventually. 
+        """
+        if self.left:
+            _, left_height = self.left.check_balanced(counter=counter+1)
+        else:
+            left_height = counter  # no depth here
+
+        if self.right:
+            _, right_height = self.right.check_balanced(counter=counter+1)
+        else:
+            right_height = counter
+        
+        return abs(left_height - right_height) <= 1, max(left_height, right_height)
+            
 
     def _balance(self):
         """balance the tree"""
@@ -141,15 +206,25 @@ if __name__ == "__main__":
     root.insert(19)
     root.insert(31)
     root.insert(42)
+    print(timeit(root.check_balanced))
+    print(timeit(root.check_balanced_old))  # much quicker!
 
-    print("%s" % root.preorder_traversal());  
-    print("%s" % root.inorder_traversal());
-    print("%s" % root.postorder_traversal());
+    #print("%s" % root.preorder_traversal());  
+    #print("%s" % root.inorder_traversal());
+    #print("%s" % root.postorder_traversal());
 
     # Kth Largest Element
-    print("%s" % root.kth_largest(1))
+    #print("%s" % root.kth_largest(1))
 
-    print(min(root));
+    # example of unbalanced tree
+    root = Node(10)
+    root.insert(9)
+    root.insert(8)
+    root.insert(7)
+    root.insert(6)
+    root.insert(5)
+    print(timeit(root.check_balanced))
+    print(timeit(root.check_balanced_old))
     
 
     

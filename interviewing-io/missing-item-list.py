@@ -58,6 +58,27 @@ def find_missing(arr1, arr2):
         s ^= j
 
     return s
+
+def find_missing_pair(arr1,arr2):
+    """
+    Find two missing values between the arrays.
+    """
+    s = sum(arr1) - sum(arr2)  # this could be large
+    print(s)
+
+    # Now I search through arr2 to find the two numbers that sum up to s
+    # This can be done with hash maps resulting O(2n) = O(n) time
+    d = {}
+    for v in arr1:
+        if v not in d:
+            d[s-v] = v
+
+    ret = ()
+    for v in arr1:
+        if v in d and d.get(v,-1) != v:
+            ret = (v,d[v])
+
+    return ret
     
     
 
@@ -66,4 +87,6 @@ if __name__ == "__main__":
     # first question was to implement a reversed array
     #print(reverse('too bad i hid a boot'))
 
-    print(find_missing([1,2,3,4,5,6,7],[3,7,2,1,4,5]))
+    #print(find_missing([1,2,3,4,5,6,7],[3,7,2,1,4,5]))
+    print(find_missing_pair([1,2,3,4,5,6,7,8],
+                            [3,7,2,1,4,5]))

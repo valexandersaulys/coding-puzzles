@@ -3,6 +3,7 @@
 Construct a function that finds the missing value between
 two lists.
 """
+from functools import reduce
 
 def reverse_list(x):    
     i = 0
@@ -59,6 +60,10 @@ def find_missing(arr1, arr2):
 
     return s
 
+def find_missing_item_pythonicly(arr1,arr2):
+    """Do it in one line!"""
+    return reduce(lambda x,y: x^y, arr1) ^ reduce(lambda x,y: x^y, arr2);
+
 def find_missing_pair(arr1,arr2):
     """
     Find two missing values between the arrays.
@@ -88,5 +93,6 @@ if __name__ == "__main__":
     #print(reverse('too bad i hid a boot'))
 
     #print(find_missing([1,2,3,4,5,6,7],[3,7,2,1,4,5]))
-    print(find_missing_pair([1,2,3,4,5,6,7,8],
-                            [3,7,2,1,4,5]))
+    #print(find_missing_pair([1,2,3,4,5,6,7,8],[3,7,2,1,4,5]))
+
+    print(find_missing_item_pythonicly([1,2,3,4,5,6,7],[3,2,1,4,5,6]))
